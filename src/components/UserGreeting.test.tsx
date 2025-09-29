@@ -17,23 +17,19 @@ describe("UserGreeting", () => {
       json: vi.fn().mockResolvedValueOnce({ name: "Jane" }),
     } as any);
     (getUserGreeting as Mock).mockReturnValue("Hello, Jane!");
-
     const onGreet = vi.fn();
 
     render(<UserGreeting userId="123" onGreet={onGreet} />);
 
     expect(screen.getByText("Loading...")).toBeInTheDocument();
-
     await waitFor(() =>
       expect(screen.getByRole("heading", { name: "Hello, Jane!" })).toBeInTheDocument()
     );
-
     expect(onGreet).toHaveBeenCalledWith("Hello, Jane!");
   });
 
   it("shouldn't call 'onGreet' function and show the Error message on the screen", async () => {
     window.fetch = vi.fn().mockRejectedValueOnce(new Error("Network error"));
-
     const onGreet = vi.fn();
 
     render(<UserGreeting userId="456" onGreet={onGreet} />);
@@ -41,7 +37,6 @@ describe("UserGreeting", () => {
     await waitFor(() =>
       expect(screen.getByRole("alert")).toHaveTextContent("Failed to load greeting.")
     );
-
     expect(onGreet).not.toHaveBeenCalled();
   });
 });
